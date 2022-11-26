@@ -1,26 +1,28 @@
 import { EthProvider } from "./contexts/EthContext";
-import Intro from "./components/Intro/";
-import Setup from "./components/Setup";
-import Demo from "./components/Demo";
-import Footer from "./components/Footer";
 import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { Container } from "@mui/material";
+import HomeScreen from "./screens/HomeScreen";
+import ThemeProvider from "./theme";
+
+// import ElectionDetail from "./screens/ElectionDetail";
+// import HomeScreen from "./screens/HomeScreen";
+// import AddElection from "./screens/AddElection";
 
 function App() {
-  return (
-    <EthProvider>
-      <div id="App" >
-        <div className="container">
-          <Intro />
-          <hr />
-          <Setup />
-          <hr />
-          <Demo />
-          <hr />
-          <Footer />
-        </div>
-      </div>
-    </EthProvider>
-  );
+	return (
+		<EthProvider>
+			<ThemeProvider>
+				<Header />
+				<Container>
+					<HomeScreen />
+				</Container>
+				<Footer />
+			</ThemeProvider>
+		</EthProvider>
+	);
 }
 
 export default App;

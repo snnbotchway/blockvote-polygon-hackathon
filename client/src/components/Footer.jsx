@@ -1,17 +1,12 @@
-function Link({ uri, text }) {
-  return <a href={uri} target="_blank" rel="noreferrer">{text}</a>;
-}
+import React from "react";
+import { Box } from "@mui/material";
 
 function Footer() {
-  return (
-    <footer>
-      <h2>More resources</h2>
-      <Link uri={"https://trufflesuite.com"} text={"Truffle"} />
-      <Link uri={"https://reactjs.org"} text={"React"} />
-      <Link uri={"https://soliditylang.org"} text={"Solidity"} />
-      <Link uri={"https://ethereum.org"} text={"Ethereum"} />
-    </footer >
-  );
+	return (
+		<footer>
+			<Box sx={{ height: "5vh" }}></Box>
+		</footer>
+	);
 }
 
 export default Footer;
