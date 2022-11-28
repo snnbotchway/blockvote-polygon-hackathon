@@ -1,16 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-	Container,
-	Paper,
-	Box,
-	Card,
-	CardContent,
-	Typography,
-	Link,
-	Button,
-	CircularProgress,
-} from "@mui/material";
+import { Link } from "react-router-dom";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import useEth from "../contexts/EthContext/useEth";
 import ElectionCard from "../components/ElectionCard";
@@ -27,30 +18,27 @@ function HomeScreen({ color = "primary" }) {
 	const [elections, setElections] = useState([]);
 	const [isOwner, setIsOwner] = useState(null);
 	const [loading, setLoading] = useState(true);
-	console.log(loading);
-
-	const getElections = async () => {
-		if (contract) {
-			console.log("getting elections");
-			const elections = await contract.methods
-				.getElections()
-				.call({ from: accounts[0] });
-			setElections(elections);
-			setLoading(false);
-		}
-	};
-
-	const getRole = async () => {
-		if (contract) {
-			console.log("getting role");
-			const isOwner = await contract.methods
-				.isOwner()
-				.call({ from: accounts[0] });
-			setIsOwner(isOwner);
-		}
-	};
 
 	useEffect(() => {
+		const getRole = async () => {
+			if (contract) {
+				console.log("getting role");
+				const isOwner = await contract.methods
+					.isOwner()
+					.call({ from: accounts[0] });
+				setIsOwner(isOwner);
+			}
+		};
+		const getElections = async () => {
+			if (contract) {
+				console.log("getting elections");
+				const elections = await contract.methods
+					.getElections()
+					.call({ from: accounts[0] });
+				setElections(elections);
+				setLoading(false);
+			}
+		};
 		getRole();
 		getElections();
 	}, [contract, accounts]);
@@ -85,13 +73,15 @@ function HomeScreen({ color = "primary" }) {
 						{isOwner && (
 							<Grid item sm={6}>
 								<Box display="flex" justifyContent="flex-end">
-									<Button
-										variant="contained"
-										size="large"
-										// onClick={newClick}
-									>
-										Add Election
-									</Button>
+									<Link
+										to="/elections/new/"
+										style={{ textDecoration: "none" }}>
+										<Button
+											variant="contained"
+											size="large">
+											Add Election
+										</Button>
+									</Link>
 								</Box>
 							</Grid>
 						)}

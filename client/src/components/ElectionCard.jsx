@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { Card, Typography, Button, Grid } from "@mui/material";
 
 ElectionCard.propTypes = {
@@ -37,13 +38,17 @@ export default function ElectionCard({
 				}}>
 				<Grid item>
 					<Typography variant="subtitle1">{title}</Typography>
-					<Button
-						sx={{ my: 2 }}
-						href={`/elections/${id}`}
-						target="_blank"
-						variant="contained">
-						{isOwner ? "Manage Election" : "Go To Election"}
-					</Button>
+					<Link
+						to={`/elections/${id}`}
+						style={{ textDecoration: "none" }}
+						state={{ id: id, title: title }}>
+						<Button
+							sx={{ my: 2 }}
+							target="_blank"
+							variant="contained">
+							{isOwner ? "Manage Election" : "Go To Election"}
+						</Button>
+					</Link>
 				</Grid>
 			</Grid>
 		</Card>

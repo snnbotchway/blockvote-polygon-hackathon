@@ -15,14 +15,14 @@ contract ElectionPortal {
     struct Candidate {
         uint256 id;
         uint256 voteCount; // Candidate vote count
-        bytes32 name; // Candidate name
-        string imageHash; // Candidate image URL
+        string name; // Candidate name
+        string imageURL; // Candidate image URL
     }
 
     // Election data structure:
     struct Election{
         uint256 id;
-        bytes32 title;
+        string title;
         Candidate [] candidates; 
         State state;
         mapping(address => bool) eligible; // Check if address is an eligible voter
@@ -30,7 +30,7 @@ contract ElectionPortal {
     }
 
     Election [] public elections; // Array with all elections
-    bytes32 [] public electionTitles; // Array with all elections
+    string [] public electionTitles; // Array with all elections
     address public immutable owner; // Contract owner(Election admin)
 
     // Set owner to address that deploys the contract
@@ -39,7 +39,7 @@ contract ElectionPortal {
     }
 
     // return elections
-    function getElections() public view returns (bytes32 [] memory _titles) {
+    function getElections() public view returns (string [] memory _titles) {
         _titles = electionTitles;
     }
 
@@ -91,13 +91,14 @@ contract ElectionPortal {
     }
 
     // Creates a new election
-    function createElection(bytes32 _title, 
-                            bytes32 [] memory _candidateNames, 
-                            string [] memory _candidateimageHashes,
+    function createElection(string memory _title, 
+                            string [] memory _candidateNames, 
+                            string [] memory _candidateimageURLs,
                             address [] memory _eligibleVoters) public { 
         require (msg.sender == owner, "Only owner can create elections");
         require(_candidateNames.length >= 2, "Must be two or more candidates.");
-        require(_candidateNames.length == _candidateimageHashes.length, "Every candidate must have an image URL");
+        require(_candidateNames.length == _candidateimageURLs.length, "Every candidate must have an image URL");
+        require(_eligibleVoters.length >= 1, "There must be at least one voter");
 
         //Store election title
         electionTitles.push(_title);
@@ -115,7 +116,7 @@ contract ElectionPortal {
             _candidate.id = i; 
             _candidate.voteCount = 0; 
             _candidate.name = _candidateNames[i]; 
-            _candidate.imageHash = _candidateimageHashes[i];
+            _candidate.imageURL = _candidateimageURLs[i];
             _election.candidates.push(_candidate); 
         }
 
