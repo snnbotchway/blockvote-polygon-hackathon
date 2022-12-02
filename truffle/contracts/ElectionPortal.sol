@@ -25,32 +25,27 @@ contract ElectionPortal {
         string title;
         Candidate [] candidates; 
         State state;
-        mapping(address => bool) eligible; // Check if address is an eligible voter
-        mapping(address => bool) hasVoted; // Check if voter has already voted
+        address owner;
+        mapping(address => bool) eligible; // For checking if address is an eligible voter
+        mapping(address => bool) hasVoted; // For checking if voter has already voted
     }
 
     Election [] public elections; // Array with all elections
-    string [] public electionTitles; // Array with all elections
-    address public immutable owner; // Contract owner(Election admin)
-
-    // Set owner to address that deploys the contract
-    constructor() {
-        owner = msg.sender;
-    }
+    string [] public electionTitles; // Array with all election names
 
     // return elections
     function getElections() public view returns (string [] memory _titles) {
         _titles = electionTitles;
     }
 
-    // return candidate info
+    // return candidate structs of a specific election
     function getCandidates(uint _electionId) public view returns (Candidate [] memory _candidates) {
         _candidates = elections[_electionId].candidates;
     }
 
-    // Check if msg sender is the owner or not:
-    function isOwner() public view returns (bool) {
-        if (owner == msg.sender) {
+    // Check if msg sender is the election owner or not:
+    function isOwner(uint _electionId) public view returns (bool) {
+        if (elections[_electionId].owner == msg.sender) {
             return true;
         }
         return false;
@@ -58,7 +53,6 @@ contract ElectionPortal {
     
     // Check if msg sender has already voted in given election:
     function hasVoted(uint _electionId) public view returns (bool _hasVoted) {
-        // Check if msg sender is in haveVoted array of given election:
         _hasVoted = elections[_electionId].hasVoted[msg.sender];
     }
     
@@ -95,12 +89,11 @@ contract ElectionPortal {
                             string [] memory _candidateNames, 
                             string [] memory _candidateimageURLs,
                             address [] memory _eligibleVoters) public { 
-        require (msg.sender == owner, "Only owner can create elections");
         require(_candidateNames.length >= 2, "Must be two or more candidates.");
         require(_candidateNames.length == _candidateimageURLs.length, "Every candidate must have an image URL");
         require(_eligibleVoters.length >= 1, "There must be at least one voter");
 
-        //Store election title
+        // Store election title
         electionTitles.push(_title);
 
         // Instantiate new election with parameters
@@ -109,6 +102,7 @@ contract ElectionPortal {
         Election storage _election = elections[idx];
         _election.title = _title;
         _election.state = State.NotStarted;
+        _election.owner = msg.sender;
 
         // Creates candidate structs for the election 
         for(uint i=0; i < _candidateNames.length; i++){
@@ -128,7 +122,7 @@ contract ElectionPortal {
 
     // Sets given election state to InProgress
     function startElection(uint _electionId) public {
-        require(msg.sender == owner, "Only owner can start the election.");
+        require(msg.sender == elections[_electionId].owner, "Only owner can start the election.");
         require(elections[_electionId].state != State.InProgress, "Election is already in progress.");
         require(elections[_electionId].state != State.Ended, "Election has ended.");
 
@@ -137,7 +131,7 @@ contract ElectionPortal {
 
     // Sets given election state to Ended
     function endElection(uint _electionId) public {
-        require(msg.sender == owner, "Only owner can end the election.");
+        require(msg.sender == elections[_electionId].owner, "Only owner can end the election.");
         require(elections[_electionId].state == State.InProgress, "Election is not in progress.");
         
         elections[_electionId].state = State.Ended;

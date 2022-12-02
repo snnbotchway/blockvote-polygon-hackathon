@@ -1,7 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
+import {
+	Box,
+	Typography,
+	Button,
+	CircularProgress,
+	Backdrop,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import useEth from "../contexts/EthContext/useEth";
 import ElectionCard from "../components/ElectionCard";
@@ -16,19 +22,9 @@ function HomeScreen({ color = "primary" }) {
 		state: { contract, accounts },
 	} = useEth();
 	const [elections, setElections] = useState([]);
-	const [isOwner, setIsOwner] = useState(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const getRole = async () => {
-			if (contract) {
-				console.log("getting role");
-				const isOwner = await contract.methods
-					.isOwner()
-					.call({ from: accounts[0] });
-				setIsOwner(isOwner);
-			}
-		};
 		const getElections = async () => {
 			if (contract) {
 				console.log("getting elections");
@@ -39,23 +35,32 @@ function HomeScreen({ color = "primary" }) {
 				setLoading(false);
 			}
 		};
-		getRole();
 		getElections();
 	}, [contract, accounts]);
 
 	return (
 		<Box>
 			{loading ? (
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						height: "70vh",
-						color: (theme) => theme.palette[color].darker,
-					}}>
-					<CircularProgress size={150} disableShrink />
-				</Box>
+				<div style={{ margin: 100, textAlign: "center" }}>
+					<Backdrop
+						open={true}
+						sx={{
+							color: "#fff",
+							zIndex: (theme) => theme.zIndex.drawer + 1,
+						}}>
+						<div>
+							<br />
+							<CircularProgress color="inherit" />
+							<br />
+							{!contract && (
+								<p>
+									Please ensure that metamask is connected to
+									the Polygon testnet...
+								</p>
+							)}
+						</div>
+					</Backdrop>
+				</div>
 			) : (
 				<Box>
 					<Grid container marginTop={7}>
@@ -70,21 +75,17 @@ function HomeScreen({ color = "primary" }) {
 								All Elections
 							</Typography>
 						</Grid>
-						{isOwner && (
-							<Grid item sm={6}>
-								<Box display="flex" justifyContent="flex-end">
-									<Link
-										to="/elections/new/"
-										style={{ textDecoration: "none" }}>
-										<Button
-											variant="contained"
-											size="large">
-											Add Election
-										</Button>
-									</Link>
-								</Box>
-							</Grid>
-						)}
+						<Grid item sm={6}>
+							<Box display="flex" justifyContent="flex-end">
+								<Link
+									to="/elections/new/"
+									style={{ textDecoration: "none" }}>
+									<Button variant="contained" size="large">
+										Add Election
+									</Button>
+								</Link>
+							</Box>
+						</Grid>
 					</Grid>
 
 					{elections.length === 0 && (
@@ -111,11 +112,7 @@ function HomeScreen({ color = "primary" }) {
 									md={6}
 									lg={6}
 									xl={6}>
-									<ElectionCard
-										id={index}
-										title={election}
-										isOwner={isOwner}
-									/>
+									<ElectionCard id={index} title={election} />
 								</Grid>
 							))}
 						</Grid>

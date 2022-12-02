@@ -23,7 +23,6 @@ export default function AddElection({ color = "primary" }) {
 	const {
 		state: { contract, accounts },
 	} = useEth();
-	const [isOwner, setIsOwner] = useState(null);
 	const [name, setName] = useState("");
 	const [candidates, setCandidates] = useState([]);
 	const [candidatesImageURLs, setCandidatesImageURLs] = useState([]);
@@ -109,19 +108,6 @@ export default function AddElection({ color = "primary" }) {
 	};
 
 	useEffect(() => {
-		const getRole = async () => {
-			if (contract) {
-				console.log("getting role");
-				const isOwner = await contract.methods
-					.isOwner()
-					.call({ from: accounts[0] });
-				setIsOwner(isOwner);
-			}
-		};
-		getRole();
-	}, [contract, accounts]);
-
-	useEffect(() => {
 		const getCandidateNames = () => {
 			let names = inputFields.map((a) => a.candidateName);
 			let urls = inputFields.map((a) => a.candidateImageURL);
@@ -149,157 +135,137 @@ export default function AddElection({ color = "primary" }) {
 				flexDirection: "column",
 				alignItems: "center",
 			}}>
-			{!isOwner ? (
+			<Box>
+				<Typography
+					variant="h4"
+					sx={{
+						color: (theme) => theme.palette[color].darker,
+					}}>
+					Enter Election Details
+				</Typography>
+				<br></br>
 				<Box
 					sx={{
 						display: "flex",
-						justifyContent: "center",
+						flexDirection: "column",
+						width: "100%",
 						alignItems: "center",
-						height: "80vh",
 					}}>
-					Unauthorized User
-				</Box>
-			) : (
-				<Box>
-					<Typography
-						variant="h4"
-						sx={{
-							color: (theme) => theme.palette[color].darker,
-						}}>
-						Enter Election Details
-					</Typography>
-					<br></br>
 					<Box
+						component="form"
 						sx={{
 							display: "flex",
 							flexDirection: "column",
-							width: "100%",
-							alignItems: "center",
-						}}>
-						<Box
-							component="form"
-							sx={{
-								display: "flex",
-								flexDirection: "column",
-							}}
-							noValidate
-							autoComplete="on"
-							onSubmit={handleForm}>
-							<Stack spacing={3}>
-								<TextField
-									id="outlined-basic"
-									label="Election Name"
-									variant="outlined"
-									required
-									value={name}
-									onChange={handleNameChange}
-									helperText={!name ? "Required" : ""}
-								/>
-								{inputFields.map((inputField, index) => (
-									<Grid container key={index}>
-										<Grid item xs={12} md={5} pb={1} pr={2}>
-											<TextField
-												className="textarea"
-												id="outlined-basic"
-												label="Candidate Name"
-												name="candidateName"
-												variant="outlined"
-												required
-												value={inputField.candidateName}
-												onChange={(event) =>
-													handleChangeInput(
-														index,
-														event,
-													)
-												}
-												fullWidth
-												helperText={
-													!inputField.candidateName
-														? "Required"
-														: ""
-												}
-											/>
-										</Grid>
-										<Grid item xs={12} md={5} pr={2}>
-											<TextField
-												className="textarea"
-												id="outlined-basic"
-												required
-												label="Candidate Image URL"
-												name="candidateImageURL"
-												variant="outlined"
-												value={
-													inputField.candidateImageURL
-												}
-												onChange={(event) =>
-													handleChangeInput(
-														index,
-														event,
-													)
-												}
-												fullWidth
-												helperText={
-													!inputField.candidateImageURL
-														? "Required"
-														: ""
-												}
-											/>
-										</Grid>
-										<Grid item md={1} pt={2} pr={2}>
-											<Button
-												size="small"
-												variant="contained"
-												color="error"
-												startIcon={<DeleteIcon />}
-												onClick={() =>
-													handleRemoveField(index)
-												}>
-												Remove
-											</Button>
-										</Grid>
+						}}
+						noValidate
+						autoComplete="on"
+						onSubmit={handleForm}>
+						<Stack spacing={3}>
+							<TextField
+								id="outlined-basic"
+								label="Election Name"
+								variant="outlined"
+								required
+								value={name}
+								onChange={handleNameChange}
+								helperText={!name ? "Required" : ""}
+							/>
+							{inputFields.map((inputField, index) => (
+								<Grid container key={index}>
+									<Grid item xs={12} md={5} pb={1} pr={2}>
+										<TextField
+											className="textarea"
+											id="outlined-basic"
+											label="Candidate Name"
+											name="candidateName"
+											variant="outlined"
+											required
+											value={inputField.candidateName}
+											onChange={(event) =>
+												handleChangeInput(index, event)
+											}
+											fullWidth
+											helperText={
+												!inputField.candidateName
+													? "Required"
+													: ""
+											}
+										/>
 									</Grid>
-								))}
-								<Button
-									sx={{ maxWidth: "170px" }}
-									size="small"
-									variant="contained"
-									color="primary"
-									startIcon={<AddIcon />}
-									onClick={() => handleAddField()}>
-									Add Candidate
-								</Button>
-								<br></br>
+									<Grid item xs={12} md={5} pr={2}>
+										<TextField
+											className="textarea"
+											id="outlined-basic"
+											required
+											label="Candidate Image URL"
+											name="candidateImageURL"
+											variant="outlined"
+											value={inputField.candidateImageURL}
+											onChange={(event) =>
+												handleChangeInput(index, event)
+											}
+											fullWidth
+											helperText={
+												!inputField.candidateImageURL
+													? "Required"
+													: ""
+											}
+										/>
+									</Grid>
+									<Grid item md={1} pt={2} pr={2}>
+										<Button
+											size="small"
+											variant="contained"
+											color="error"
+											startIcon={<DeleteIcon />}
+											onClick={() =>
+												handleRemoveField(index)
+											}>
+											Remove
+										</Button>
+									</Grid>
+								</Grid>
+							))}
+							<Button
+								sx={{ maxWidth: "170px" }}
+								size="small"
+								variant="contained"
+								color="primary"
+								startIcon={<AddIcon />}
+								onClick={() => handleAddField()}>
+								Add Candidate
+							</Button>
+							<br></br>
 
-								<TextField
-									helperText={!voters ? "Required" : ""}
-									className="textarea"
-									id="outlined-basic"
-									label="Voters Ethereum Addresses"
-									variant="outlined"
-									multiline
-									minRows={5}
-									maxRows={5}
-									required
-									value={voters}
-									onChange={handleVotersChange}
-								/>
-								<LoadingButton
-									color="primary"
-									size="large"
-									sx={{ width: "250px" }}
-									startIcon={<AddIcon />}
-									loadingPosition="start"
-									loading={submitting}
-									disabled={submitting}
-									variant="contained"
-									type="submit">
-									{buttonLabel}
-								</LoadingButton>
-							</Stack>
-						</Box>
+							<TextField
+								helperText={!voters ? "Required" : ""}
+								className="textarea"
+								id="outlined-basic"
+								label="Voters Ethereum Addresses"
+								variant="outlined"
+								multiline
+								minRows={5}
+								maxRows={5}
+								required
+								value={voters}
+								onChange={handleVotersChange}
+							/>
+							<LoadingButton
+								color="primary"
+								size="large"
+								sx={{ width: "250px" }}
+								startIcon={<AddIcon />}
+								loadingPosition="start"
+								loading={submitting}
+								disabled={submitting}
+								variant="contained"
+								type="submit">
+								{buttonLabel}
+							</LoadingButton>
+						</Stack>
 					</Box>
 				</Box>
-			)}
+			</Box>
 
 			<Dialog
 				open={open1}

@@ -37,25 +37,6 @@ const VoterDetail = ({
 	const [disabled, setDisabled] = useState(false);
 	const [buttonLabel, setButtonLabel] = useState("VOTE");
 
-	const getVoter = async () => {
-		if (contract) {
-			const voter = await contract.methods
-				.isEligible(id)
-				.call({ from: currentAccount });
-			setIsVoter(voter);
-		}
-	};
-
-	const checkVoted = async () => {
-		if (contract) {
-			const voted = await contract.methods
-				.hasVoted(id)
-				.call({ from: currentAccount });
-			setHasVoted(voted);
-			setLoading(false);
-		}
-	};
-
 	const voteCandidate = async (candidate) => {
 		setButtonLabel("Please wait...");
 		setDisabled(true);
@@ -73,19 +54,37 @@ const VoterDetail = ({
 		setDisabled(false);
 	};
 
-	const getElectionState = async () => {
-		if (contract) {
-			const state = await contract.methods.getElectionState(id).call();
-			setElectionState(parseInt(state));
-		}
-	};
-
 	useEffect(() => {
+		const getVoter = async () => {
+			if (contract) {
+				const voter = await contract.methods
+					.isEligible(id)
+					.call({ from: currentAccount });
+				setIsVoter(voter);
+			}
+		};
+
+		const checkVoted = async () => {
+			if (contract) {
+				const voted = await contract.methods
+					.hasVoted(id)
+					.call({ from: currentAccount });
+				setHasVoted(voted);
+				setLoading(false);
+			}
+		};
+		const getElectionState = async () => {
+			if (contract) {
+				const state = await contract.methods
+					.getElectionState(id)
+					.call();
+				setElectionState(parseInt(state));
+			}
+		};
 		getElectionState();
 		getVoter();
 		checkVoted();
-		// eslint-disable-next-line
-	}, [contract]);
+	}, [contract, id, currentAccount, open]);
 
 	const handleVoteChange = (event) => {
 		setVote(event.target.value);
@@ -97,11 +96,8 @@ const VoterDetail = ({
 	};
 
 	const handleClose = () => {
-		// navigate("/elections");
 		setOpen(false);
 		setLoading(true);
-		checkVoted();
-		window.location.reload();
 	};
 
 	return (
@@ -115,15 +111,14 @@ const VoterDetail = ({
 				<CircularProgress color="inherit" />
 			</Backdrop>
 			{loading ? (
-				<Box
+				<Backdrop
 					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						height: "80vh",
-					}}>
-					Loading...
-				</Box>
+						color: "#fff",
+						zIndex: (theme) => theme.zIndex.drawer + 1,
+					}}
+					open={disabled}>
+					<CircularProgress color="inherit" />
+				</Backdrop>
 			) : (
 				<Box>
 					{!hasVoted && isVoter && (
@@ -134,7 +129,7 @@ const VoterDetail = ({
 									sx={{ mt: 0 }}
 									spacing={5}
 									justifyContent="center">
-									<Grid item xs={12}>
+									<Grid item xs={12} marginBottom={4}>
 										<Typography
 											sx={{
 												color: (theme) =>
@@ -168,35 +163,48 @@ const VoterDetail = ({
 														onChange={
 															handleVoteChange
 														}>
-														{candidates.map(
-															(candidate) => (
-																<FormControlLabel
-																	key={
-																		candidate.id
-																	}
-																	labelPlacement="top"
-																	control={
-																		<Radio />
-																	}
-																	value={
-																		candidate.id
-																	}
-																	label={
-																		<Candidate
-																			id={
+														<Grid
+															mb={4}
+															container
+															spacing={2}
+															alignItems="center"
+															justifyContent="center">
+															{candidates.map(
+																(candidate) => (
+																	<Grid
+																		item
+																		key={
+																			candidate.id
+																		}>
+																		<FormControlLabel
+																			key={
 																				candidate.id
 																			}
-																			name={
-																				candidate.name
+																			labelPlacement="top"
+																			control={
+																				<Radio />
 																			}
-																			imageURL={
-																				candidate.imageURL
+																			value={
+																				candidate.id
+																			}
+																			label={
+																				<Candidate
+																					id={
+																						candidate.id
+																					}
+																					name={
+																						candidate.name
+																					}
+																					imageURL={
+																						candidate.imageURL
+																					}
+																				/>
 																			}
 																		/>
-																	}
-																/>
-															),
-														)}
+																	</Grid>
+																),
+															)}
+														</Grid>
 													</RadioGroup>
 												</FormControl>
 											</Grid>
@@ -227,6 +235,21 @@ const VoterDetail = ({
 									)}
 
 									{electionState === 2 && (
+										<Grid mt={4} item xs={12}>
+											<Typography
+												sx={{
+													color: (theme) =>
+														theme.palette[color]
+															.darker,
+												}}
+												align="center"
+												variant="h6">
+												FINAL ELECTION RESULT
+											</Typography>
+										</Grid>
+									)}
+
+									{electionState === 2 && (
 										<Grid
 											item
 											xs={12}
@@ -246,8 +269,8 @@ const VoterDetail = ({
 												{candidates &&
 													candidates.map(
 														(candidate) => (
-															<Box
-																sx={{ mx: 2 }}
+															<Grid
+																item
 																key={
 																	candidate.id
 																}>
@@ -265,7 +288,7 @@ const VoterDetail = ({
 																		candidate.imageURL
 																	}
 																/>
-															</Box>
+															</Grid>
 														),
 													)}
 											</Grid>
@@ -304,53 +327,65 @@ const VoterDetail = ({
 											"Election has ended."}
 									</Typography>
 								</Grid>
-								<Grid mt={4} item xs={12}>
-									<Typography
-										sx={{
-											color: (theme) =>
-												theme.palette[color].darker,
-										}}
-										align="center"
-										variant="h6">
-										{electionState === 1 &&
-											"SEE LIVE RESULTS"}
-										{electionState === 2 &&
-											"FINAL ELECTION RESULT"}
-									</Typography>
-								</Grid>
-								<Grid
-									item
-									xs={12}
-									sx={{
-										overflowY: "hidden",
-										overflowX: "auto",
-										display: "flex",
-										width: "98vw",
-										justifyContent: "center",
-									}}>
-									<Grid
-										mb={4}
-										container
-										spacing={2}
-										alignItems="center"
-										justifyContent="center">
-										{candidates &&
-											candidates.map((candidate) => (
-												<Grid item key={candidate.id}>
-													<Candidate
-														id={candidate.id}
-														name={candidate.name}
-														voteCount={
-															candidate.voteCount
-														}
-														imageURL={
-															candidate.imageURL
-														}
-													/>
-												</Grid>
-											))}
+								{electionState === 2 && (
+									<Grid container sx={{ mt: 0 }} spacing={4}>
+										<Grid mt={4} item xs={12}>
+											<Typography
+												sx={{
+													color: (theme) =>
+														theme.palette[color]
+															.darker,
+												}}
+												align="center"
+												variant="h6">
+												FINAL ELECTION RESULT
+											</Typography>
+										</Grid>
+										<Grid
+											item
+											xs={12}
+											sx={{
+												overflowY: "hidden",
+												overflowX: "auto",
+												display: "flex",
+												width: "98vw",
+												justifyContent: "center",
+											}}>
+											<Grid
+												mb={4}
+												container
+												spacing={2}
+												alignItems="center"
+												justifyContent="center">
+												{candidates &&
+													candidates.map(
+														(candidate) => (
+															<Grid
+																item
+																key={
+																	candidate.id
+																}>
+																<Candidate
+																	id={
+																		candidate.id
+																	}
+																	name={
+																		candidate.name
+																	}
+																	voteCount={
+																		candidate.voteCount
+																	}
+																	imageURL={
+																		candidate.imageURL
+																	}
+																/>
+															</Grid>
+														),
+													)}
+											</Grid>
+										</Grid>
 									</Grid>
-								</Grid>
+								)}
 							</Grid>
 						</Box>
 					)}

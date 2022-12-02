@@ -6,11 +6,14 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ElectionDetail({ color = "primary" }) {
 	const location = useLocation();
-	const { id, title } = location.state;
-
+	const { id } = useParams();
+	const [title, setTitle] = useState("");
+	console.log(id);
 	const {
 		state: { contract, accounts },
 	} = useEth();
@@ -23,7 +26,7 @@ export default function ElectionDetail({ color = "primary" }) {
 			if (contract) {
 				console.log("getting role");
 				const isOwner = await contract.methods
-					.isOwner()
+					.isOwner(id)
 					.call({ from: accounts[0] });
 				setIsOwner(isOwner);
 			}
@@ -34,12 +37,19 @@ export default function ElectionDetail({ color = "primary" }) {
 					.getCandidates(id)
 					.call();
 				setCandidates(candidates);
+			}
+		};
+		const getTitle = async () => {
+			if (contract) {
+				const title = await contract.methods.electionTitles(id).call();
+				setTitle(title);
 				setLoading(false);
 			}
 		};
 		getRole();
 		getCandidates();
-	}, [contract, accounts]);
+		getTitle();
+	}, [contract, accounts, id, title]);
 
 	return (
 		<Box
@@ -49,15 +59,14 @@ export default function ElectionDetail({ color = "primary" }) {
 				height: "100vh",
 			}}>
 			{loading ? (
-				<Box
+				<Backdrop
 					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						height: "80vh",
-					}}>
-					Loading...
-				</Box>
+						color: "#fff",
+						zIndex: (theme) => theme.zIndex.drawer + 1,
+					}}
+					open={true}>
+					<CircularProgress color="inherit" />
+				</Backdrop>
 			) : (
 				<Box>
 					<Box marginTop={4}>

@@ -28,18 +28,18 @@ const OwnerDetail = ({
 	const [buttonLabel, setButtonLabel] = useState("Agree");
 	const [open, setOpen] = useState(false);
 
-	const getElectionState = async () => {
-		if (contract) {
-			const state = await contract.methods.getElectionState(id).call();
-			setElectionState(parseInt(state));
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
+		const getElectionState = async () => {
+			if (contract) {
+				const state = await contract.methods
+					.getElectionState(id)
+					.call();
+				setElectionState(parseInt(state));
+				setLoading(false);
+			}
+		};
 		getElectionState();
-		// eslint-disable-next-line
-	}, [contract]);
+	}, [contract, open, id]);
 
 	const handleEnd = () => {
 		setOpen(true);
@@ -58,7 +58,6 @@ const OwnerDetail = ({
 					await contract.methods
 						.startElection(id)
 						.send({ from: currentAccount });
-					getElectionState();
 				}
 			} catch (error) {
 				console.error("Error:", error);
@@ -69,7 +68,6 @@ const OwnerDetail = ({
 					await contract.methods
 						.endElection(id)
 						.send({ from: currentAccount });
-					getElectionState();
 				}
 			} catch (error) {
 				console.error("Error:", error);
@@ -83,15 +81,14 @@ const OwnerDetail = ({
 	return (
 		<Box>
 			{loading ? (
-				<Box
+				<Backdrop
 					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						height: "80vh",
-					}}>
-					Loading...
-				</Box>
+						color: "#fff",
+						zIndex: (theme) => theme.zIndex.drawer + 1,
+					}}
+					open={true}>
+					<CircularProgress color="inherit" />
+				</Backdrop>
 			) : (
 				<Box>
 					<Grid container sx={{ mt: 0 }} spacing={4}>
@@ -122,21 +119,21 @@ const OwnerDetail = ({
 								</Button>
 							</Grid>
 						)}
+						{electionState === 2 && (
+							<Grid mt={4} item xs={12}>
+								<Typography
+									sx={{
+										color: (theme) =>
+											theme.palette[color].darker,
+									}}
+									align="center"
+									variant="h6">
+									FINAL ELECTION RESULT
+								</Typography>
+							</Grid>
+						)}
 
-						<Grid mt={4} item xs={12}>
-							<Typography
-								sx={{
-									color: (theme) =>
-										theme.palette[color].darker,
-								}}
-								align="center"
-								variant="h6">
-								{electionState === 1 && "SEE LIVE RESULTS"}
-								{electionState === 2 && "FINAL ELECTION RESULT"}
-							</Typography>
-						</Grid>
-
-						{electionState > 0 && (
+						{electionState === 2 && (
 							<Grid
 								item
 								xs={12}
