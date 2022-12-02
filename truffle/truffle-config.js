@@ -24,7 +24,7 @@
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 require("dotenv").config(); // Load .env file
-const { INFURA_API_KEY, MNEMONIC } = process.env;
+const { QUICK_NODE_KEY, MNEMONIC } = process.env;
 
 module.exports = {
 	/**
@@ -64,7 +64,7 @@ module.exports = {
 		// Useful for deploying to a public network.
 		// Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
 		matic: {
-			provider: () => new HDWalletProvider(MNEMONIC, INFURA_API_KEY),
+			provider: () => new HDWalletProvider(MNEMONIC, QUICK_NODE_KEY),
 			network_id: 80001,
 			confirmations: 2,
 			timeoutBlocks: 200,
