@@ -147,92 +147,88 @@ const VoterDetail = ({
 										</Typography>
 									</Grid>
 									{electionState === 1 && (
-										<Box>
-											<Grid item xs={12}>
-												<FormControl>
-													<RadioGroup
-														row
-														sx={{
-															overflowY: "hidden",
-															overflowX: "auto",
-															display: "flex",
-															width: "98vw",
-															justifyContent:
-																"center",
-														}}
-														value={vote}
-														onChange={
-															handleVoteChange
-														}>
-														<Grid
-															mb={4}
-															container
-															spacing={2}
-															alignItems="center"
-															justifyContent="center">
-															{candidates.map(
-																(candidate) => (
-																	<Grid
-																		item
+										<Grid item xs={12}>
+											<FormControl>
+												<RadioGroup
+													row
+													sx={{
+														overflowY: "hidden",
+														overflowX: "auto",
+														display: "flex",
+														width: "98vw",
+														justifyContent:
+															"center",
+													}}
+													value={vote}
+													onChange={handleVoteChange}>
+													<Grid
+														mb={4}
+														container
+														spacing={2}
+														alignItems="center"
+														justifyContent="center">
+														{candidates.map(
+															(candidate) => (
+																<Grid
+																	item
+																	key={
+																		candidate.id
+																	}>
+																	<FormControlLabel
 																		key={
 																			candidate.id
-																		}>
-																		<FormControlLabel
-																			key={
-																				candidate.id
-																			}
-																			labelPlacement="top"
-																			control={
-																				<Radio />
-																			}
-																			value={
-																				candidate.id
-																			}
-																			label={
-																				<Candidate
-																					id={
-																						candidate.id
-																					}
-																					name={
-																						candidate.name
-																					}
-																					imageURL={
-																						candidate.imageURL
-																					}
-																				/>
-																			}
-																		/>
-																	</Grid>
-																),
-															)}
-														</Grid>
-													</RadioGroup>
-												</FormControl>
-											</Grid>
+																		}
+																		labelPlacement="top"
+																		control={
+																			<Radio />
+																		}
+																		value={
+																			candidate.id
+																		}
+																		label={
+																			<Candidate
+																				id={
+																					candidate.id
+																				}
+																				name={
+																					candidate.name
+																				}
+																				imageURL={
+																					candidate.imageURL
+																				}
+																			/>
+																		}
+																	/>
+																</Grid>
+															),
+														)}
+													</Grid>
+												</RadioGroup>
+											</FormControl>
+										</Grid>
+									)}
 
-											<Grid
-												item
-												xs={12}
-												mb={4}
-												sx={{
-													textAlign: "center",
-												}}>
-												<LoadingButton
-													startIcon={
-														<HowToVoteIcon />
-													}
-													loadingPosition="start"
-													color="info"
-													size="large"
-													loading={disabled}
-													disabled={disabled}
-													type="submit"
-													variant="contained"
-													sx={{ minWidth: "200px" }}>
-													{buttonLabel}
-												</LoadingButton>
-											</Grid>
-										</Box>
+									{electionState === 1 && (
+										<Grid
+											item
+											xs={12}
+											mb={4}
+											sx={{
+												textAlign: "center",
+											}}>
+											<LoadingButton
+												startIcon={<HowToVoteIcon />}
+												loadingPosition="start"
+												color="info"
+												size="large"
+												loading={disabled}
+												disabled={disabled}
+												type="submit"
+												variant="contained"
+												sx={{ minWidth: "200px" }}>
+												{buttonLabel}
+											</LoadingButton>
+										</Grid>
 									)}
 
 									{electionState === 2 && (

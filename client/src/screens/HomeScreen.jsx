@@ -62,7 +62,13 @@ function HomeScreen({ color = "primary" }) {
 				</div>
 			) : (
 				<Box>
-					<Grid container marginTop={7}>
+					<Grid
+						container
+						marginTop={7}
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+						}}>
 						<Grid item sm={6}>
 							<Typography
 								variant="h4"
@@ -75,15 +81,13 @@ function HomeScreen({ color = "primary" }) {
 							</Typography>
 						</Grid>
 						<Grid item sm={6}>
-							<Box display="flex" justifyContent="flex-end">
-								<Link
-									to="/elections/new/"
-									style={{ textDecoration: "none" }}>
-									<Button variant="contained" size="large">
-										Add Election
-									</Button>
-								</Link>
-							</Box>
+							<Link
+								to="/elections/new/"
+								style={{ textDecoration: "none" }}>
+								<Button variant="contained" size="large">
+									Add Election
+								</Button>
+							</Link>
 						</Grid>
 					</Grid>
 

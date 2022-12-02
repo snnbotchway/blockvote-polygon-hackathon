@@ -239,8 +239,7 @@ export default function AddElection({ color = "primary" }) {
 							<br></br>
 
 							<TextField
-								helperText={!voters ? "Required" : ""}
-								className="textarea"
+								helperText="Please place each address on one line."
 								id="outlined-basic"
 								label="Voters Ethereum Addresses"
 								variant="outlined"

@@ -13,9 +13,6 @@ function Header() {
 	return (
 		<header>
 			<AppBar
-				sx={{
-					minHeight: "5rem",
-				}}
 				position="static"
 				style={{
 					background: "#2E3B55",
@@ -39,10 +36,7 @@ function Header() {
 								color: "inherit",
 								textDecoration: "inherit",
 							}}
-							sx={{
-								flexGrow: 1,
-								display: { xs: "none", sm: "block" },
-							}}>
+							sx={{ flexGrow: 1 }}>
 							BlockVote
 						</Typography>
 					</Toolbar>
