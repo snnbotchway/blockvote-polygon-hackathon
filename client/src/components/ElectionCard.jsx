@@ -23,8 +23,8 @@ export default function ElectionCard({
 	return (
 		<Card
 			sx={{
-				height: "15vh",
-				p: 5,
+				maxHeight: "17vh",
+				p: 3,
 				boxShadow: 0,
 				textAlign: "center",
 				justifyContent: "center",
@@ -47,7 +47,7 @@ export default function ElectionCard({
 						style={{ textDecoration: "none" }}
 						state={{ id: id, title: title }}>
 						<Button
-							sx={{ my: 2 }}
+							sx={{ mt: 3, mb: 1 }}
 							target="_blank"
 							variant="contained">
 							{isOwner ? "Manage Election" : "Go To Election"}
