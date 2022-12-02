@@ -1,13 +1,16 @@
 import { EthProvider } from "./contexts/EthContext";
-import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { Container } from "@mui/material";
-import HomeScreen from "./screens/HomeScreen";
+
+import ThemeProvider from "./theme";
+
 import AddElection from "./screens/AddElection";
 import ElectionDetail from "./screens/ElectionDetail";
-import ThemeProvider from "./theme";
+import HomeScreen from "./screens/HomeScreen";
+
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+
+import Container from "@mui/material/Container";
 
 function App() {
 	return (

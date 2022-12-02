@@ -1,6 +1,10 @@
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { Card, Typography, Button, Grid } from "@mui/material";
+import PropTypes from "prop-types";
+
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
 ElectionCard.propTypes = {
 	color: PropTypes.string,

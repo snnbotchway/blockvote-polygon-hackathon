@@ -1,19 +1,19 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import useEth from "../contexts/EthContext/useEth";
+
 import OwnerDetail from "./OwnerDetail";
 import VoterDetail from "./VoterDetail";
-import useEth from "../contexts/EthContext/useEth";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 
 export default function ElectionDetail({ color = "primary" }) {
-	const location = useLocation();
 	const { id } = useParams();
 	const [title, setTitle] = useState("");
-	console.log(id);
 	const {
 		state: { contract, accounts },
 	} = useEth();
@@ -24,7 +24,6 @@ export default function ElectionDetail({ color = "primary" }) {
 	useEffect(() => {
 		const getRole = async () => {
 			if (contract) {
-				console.log("getting role");
 				const isOwner = await contract.methods
 					.isOwner(id)
 					.call({ from: accounts[0] });

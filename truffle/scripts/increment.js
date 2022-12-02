@@ -13,8 +13,5 @@ module.exports = async function (callback) {
 	const elections = await deployed.getElections();
 	console.log(`Current elections value: ${elections}`);
 
-	const isOwner = await deployed.isOwner();
-	console.log(`Current isOwner value: ${isOwner}`);
-
 	callback();
 };

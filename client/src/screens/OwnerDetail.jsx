@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
+
+import Candidate from "../components/CandidateCard";
+
+import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
-import { LoadingButton } from "@mui/lab";
 
-import Candidate from "../components/CandidateCard";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const OwnerDetail = ({
 	id,

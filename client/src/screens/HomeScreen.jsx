@@ -1,17 +1,17 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-	Box,
-	Typography,
-	Button,
-	CircularProgress,
-	Backdrop,
-} from "@mui/material";
-import Grid from "@mui/material/Grid";
+
 import useEth from "../contexts/EthContext/useEth";
 import ElectionCard from "../components/ElectionCard";
 import PropTypes from "prop-types";
+
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
 HomeScreen.propTypes = {
 	color: PropTypes.string,
@@ -27,7 +27,6 @@ function HomeScreen({ color = "primary" }) {
 	useEffect(() => {
 		const getElections = async () => {
 			if (contract) {
-				console.log("getting elections");
 				const elections = await contract.methods
 					.getElections()
 					.call({ from: accounts[0] });
@@ -55,7 +54,7 @@ function HomeScreen({ color = "primary" }) {
 							{!contract && (
 								<p>
 									Please ensure that metamask is connected to
-									the Polygon testnet...
+									Polygon's Mumbai testnet...
 								</p>
 							)}
 						</div>
