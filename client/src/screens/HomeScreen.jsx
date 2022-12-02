@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 HomeScreen.propTypes = {
@@ -62,14 +63,13 @@ function HomeScreen({ color = "primary" }) {
 				</div>
 			) : (
 				<Box>
-					<Grid
-						container
-						marginTop={7}
-						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-						}}>
-						<Grid item sm={6}>
+					<Stack
+						marginTop={5}
+						direction="row"
+						justifyContent="space-between"
+						alignItems="center"
+						spacing={3}>
+						<Box>
 							<Typography
 								variant="h4"
 								sx={{
@@ -79,8 +79,8 @@ function HomeScreen({ color = "primary" }) {
 								{" "}
 								All Elections
 							</Typography>
-						</Grid>
-						<Grid item sm={6}>
+						</Box>
+						<Box>
 							<Link
 								to="/elections/new/"
 								style={{ textDecoration: "none" }}>
@@ -88,8 +88,8 @@ function HomeScreen({ color = "primary" }) {
 									Add Election
 								</Button>
 							</Link>
-						</Grid>
-					</Grid>
+						</Box>
+					</Stack>
 
 					{elections.length === 0 && (
 						<Box
