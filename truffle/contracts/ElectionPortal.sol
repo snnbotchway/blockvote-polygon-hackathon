@@ -31,14 +31,23 @@ contract ElectionPortal {
     }
 
     Election [] public elections; // Array with all elections
-    string [] public electionTitles; // Array with all election names
 
-    // return elections
-    function getElections() public view returns (string [] memory _titles) {
-        _titles = electionTitles;
+    // Returns array of election titles
+    function getElections() public view returns (string [] memory) {
+        string [] memory _titles = new string[](elections.length); 
+        for(uint i=0; i < elections.length; i++){
+            _titles[i] = elections[i].title;
+        }
+        return _titles;
     }
 
-    // return candidate structs of a specific election
+    // Returns election title
+    function getElectionTitle(uint256 _electionId) public view returns (string memory _title) {
+        _title = elections[_electionId].title;
+    }
+
+
+    // Returns candidate structs of a specific election
     function getCandidates(uint _electionId) public view returns (Candidate [] memory _candidates) {
         _candidates = elections[_electionId].candidates;
     }
@@ -61,7 +70,7 @@ contract ElectionPortal {
         _eligible = elections[_electionId].eligible[msg.sender];
     }
 
-    // Vote for a specific candidate in a given election
+    // Vote for a specific candidate in a specific election
     function vote(uint _electionId, uint _candidateId) public {
         require(elections[_electionId].state == State.InProgress, "Election not in progress");
         require(isEligible(_electionId), "Ineligible for election");
@@ -89,12 +98,9 @@ contract ElectionPortal {
                             string [] memory _candidateNames, 
                             string [] memory _candidateimageURLs,
                             address [] memory _eligibleVoters) public { 
-        require(_candidateNames.length >= 2, "Must be two or more candidates.");
+        require(_candidateNames.length >= 2, "Candidates less than 2");
         require(_candidateNames.length == _candidateimageURLs.length, "Every candidate must have an image URL");
-        require(_eligibleVoters.length >= 1, "There must be at least one voter");
-
-        // Store election title
-        electionTitles.push(_title);
+        require(_eligibleVoters.length >= 1, "No voters");
 
         // Instantiate new election with parameters
         uint256 idx = elections.length;
