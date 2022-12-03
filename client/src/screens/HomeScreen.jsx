@@ -54,8 +54,8 @@ function HomeScreen({ color = "primary" }) {
 							<br />
 							{!contract && (
 								<p>
-									Please ensure that metamask is connected to
-									Polygon's Mumbai testnet...
+									Please ensure that metamask is unlocked and
+									Polygon's Mumbai testnet is selected...
 								</p>
 							)}
 						</div>

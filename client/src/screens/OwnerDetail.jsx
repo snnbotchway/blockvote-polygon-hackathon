@@ -89,7 +89,7 @@ const OwnerDetail = ({
 						color: "#fff",
 						zIndex: (theme) => theme.zIndex.drawer + 1,
 					}}
-					open={true}>
+					open>
 					<CircularProgress color="inherit" />
 				</Backdrop>
 			) : (
@@ -105,10 +105,11 @@ const OwnerDetail = ({
 								variant="h6">
 								ELECTION STATUS :{" "}
 								{electionState === 0 &&
-									"Election has not started."}
+									"This election has not started."}
 								{electionState === 1 &&
-									"Election is in progress."}
-								{electionState === 2 && "Election has ended."}
+									"This election is in progress. Results will be available after you end it."}
+								{electionState === 2 &&
+									"This election has ended."}
 							</Typography>
 						</Grid>
 						{electionState !== 2 && (

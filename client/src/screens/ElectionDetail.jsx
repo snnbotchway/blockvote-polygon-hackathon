@@ -40,7 +40,9 @@ export default function ElectionDetail({ color = "primary" }) {
 		};
 		const getTitle = async () => {
 			if (contract) {
-				const title = await contract.methods.electionTitles(id).call();
+				const title = await contract.methods
+					.getElectionTitle(id)
+					.call();
 				setTitle(title);
 				setLoading(false);
 			}

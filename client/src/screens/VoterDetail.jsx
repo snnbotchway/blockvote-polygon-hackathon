@@ -71,7 +71,6 @@ const VoterDetail = ({
 					.hasVoted(id)
 					.call({ from: currentAccount });
 				setHasVoted(voted);
-				setLoading(false);
 			}
 		};
 		const getElectionState = async () => {
@@ -80,11 +79,12 @@ const VoterDetail = ({
 					.getElectionState(id)
 					.call();
 				setElectionState(parseInt(state));
+				setLoading(false);
 			}
 		};
-		getElectionState();
 		getVoter();
 		checkVoted();
+		getElectionState();
 	}, [contract, id, currentAccount, open]);
 
 	const handleVoteChange = (event) => {
@@ -117,7 +117,7 @@ const VoterDetail = ({
 						color: "#fff",
 						zIndex: (theme) => theme.zIndex.drawer + 1,
 					}}
-					open={disabled}>
+					open>
 					<CircularProgress color="inherit" />
 				</Backdrop>
 			) : (
@@ -139,7 +139,7 @@ const VoterDetail = ({
 											align="center"
 											variant="h6">
 											{electionState === 0 &&
-												"Please Wait... This election has not started yet."}
+												"Please Wait... The owner of this election has not started it yet."}
 											{electionState === 1 &&
 												"PLEASE PLACE YOUR VOTE"}
 											{electionState === 2 &&
@@ -147,65 +147,69 @@ const VoterDetail = ({
 										</Typography>
 									</Grid>
 									{electionState === 1 && (
-										<Grid item xs={12}>
-											<FormControl>
-												<RadioGroup
-													row
-													sx={{
-														overflowY: "hidden",
-														overflowX: "auto",
-														display: "flex",
-														width: "98vw",
-														justifyContent:
-															"center",
-													}}
-													value={vote}
-													onChange={handleVoteChange}>
-													<Grid
-														mb={4}
-														container
-														spacing={2}
-														alignItems="center"
-														justifyContent="center">
-														{candidates.map(
-															(candidate) => (
-																<Grid
-																	item
-																	key={
-																		candidate.id
-																	}>
-																	<FormControlLabel
+										<Box>
+											<Grid item xs={12}>
+												<FormControl>
+													<RadioGroup
+														row
+														sx={{
+															overflowY: "hidden",
+															overflowX: "auto",
+															display: "flex",
+															width: "98vw",
+															justifyContent:
+																"center",
+														}}
+														value={vote}
+														onChange={
+															handleVoteChange
+														}>
+														<Grid
+															mb={4}
+															container
+															spacing={2}
+															alignItems="center"
+															justifyContent="center">
+															{candidates.map(
+																(candidate) => (
+																	<Grid
+																		item
 																		key={
 																			candidate.id
-																		}
-																		labelPlacement="top"
-																		control={
-																			<Radio />
-																		}
-																		value={
-																			candidate.id
-																		}
-																		label={
-																			<Candidate
-																				id={
-																					candidate.id
-																				}
-																				name={
-																					candidate.name
-																				}
-																				imageURL={
-																					candidate.imageURL
-																				}
-																			/>
-																		}
-																	/>
-																</Grid>
-															),
-														)}
-													</Grid>
-												</RadioGroup>
-											</FormControl>
-										</Grid>
+																		}>
+																		<FormControlLabel
+																			key={
+																				candidate.id
+																			}
+																			labelPlacement="top"
+																			control={
+																				<Radio />
+																			}
+																			value={
+																				candidate.id
+																			}
+																			label={
+																				<Candidate
+																					id={
+																						candidate.id
+																					}
+																					name={
+																						candidate.name
+																					}
+																					imageURL={
+																						candidate.imageURL
+																					}
+																				/>
+																			}
+																		/>
+																	</Grid>
+																),
+															)}
+														</Grid>
+													</RadioGroup>
+												</FormControl>
+											</Grid>
+										</Box>
 									)}
 
 									{electionState === 1 && (
@@ -319,9 +323,19 @@ const VoterDetail = ({
 										variant="h6">
 										ELECTION STATUS :{" "}
 										{electionState === 1 &&
-											"Election is in progress."}
+											"Election is in progress. You have already placed your vote for this election."}
 										{electionState === 2 &&
 											"Election has ended."}
+									</Typography>
+									<Typography
+										sx={{
+											color: (theme) =>
+												theme.palette[color].darker,
+										}}
+										align="center"
+										variant="h6">
+										{electionState === 1 &&
+											"The results will be available when the owner ends the election."}
 									</Typography>
 								</Grid>
 								{electionState === 2 && (
