@@ -1,6 +1,6 @@
 # BlockVote
 
-A decentralized voting platform deployed on [Fleek.](https://blockvote.on.fleek.co)
+A decentralized voting platform deployed to [Fleek.](https://blockvote.on.fleek.co)
 
 ## Technology Stack
 
