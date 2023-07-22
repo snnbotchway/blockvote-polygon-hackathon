@@ -24,6 +24,9 @@ A decentralized voting platform deployed to [Fleek.](https://blockvote.on.fleek.
 
 4. Find the election on the homepage and navigate to the election to start it. Wait for the eligible voters to place their votes, after which you can end the election to display the results.
 
-## Smart Contract Tests
+## Winners Announced
 
-![tests](https://user-images.githubusercontent.com/62394255/205449321-fe970450-1255-44bd-a361-76055cb0754f.png)
+Won something...not bad.
+
+![image](https://github.com/snnbotchway/blockvote-polygon-hackathon/assets/62394255/66c89255-f0ce-4afc-ad63-d9614e2b1d32)
+
